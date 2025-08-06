@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Fluxo de Internação Eletiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* bg-gray-50 */
+            color: #00401A; /* text-dark-text */
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0A5F55, #00995D); /* Verde Escuro para Verde Primário */
+        }
+        .text-primary-green { color: #00995D; }
+        .text-dark-green { color: #0A5F55; }
+        .text-accent-orange { color: #F47920; }
+        .border-light-green { border-color: #B1D346; } /* Verde Claro para bordas */
+        .bg-light-green { background-color: #B1D346; }
+        .bg-light-yellow { background-color: #FFCB08; }
+        .text-dark-text { color: #00401A; } /* Verde muito escuro para texto geral */
+
+        .desktop-card {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .desktop-input {
+            margin-top: 0.25rem;
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+        .desktop-input:focus {
+            outline: 2px solid #00995D;
+            border-color: #00995D;
+        }
+        .desktop-btn-primary {
+            background-color: #00995D;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+        }
+        .desktop-btn-primary:hover {
+            background-color: #0A5F55;
+            transform: scale(1.02);
+        }
+        .desktop-step-indicator {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .desktop-step-indicator.active { background-color: #00995D; }
+        .desktop-step-indicator.inactive { background-color: #9CA3AF; } /* gray-400 */
+        .desktop-step-indicator.completed { background-color: #0A5F55; } /* dark green */
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-dark-text">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-2xl md:text-3xl font-black text-dark-green uppercase tracking-wide">Fluxo de Internação Eletiva 💻</h1>
+        </header>
+
+        <section id="prototipo-desktop">
+            <div class="desktop-card">
+                <div class="w-full flex flex-col items-center">
+                    <!-- Indicadores de Passo -->
+                    <div class="flex justify-center space-x-4 mb-8">
+                        <div id="step1-indicator" class="desktop-step-indicator active">1</div>
+                        <div id="step2-indicator" class="desktop-step-indicator inactive">2</div>
+                        <div id="step3-indicator" class="desktop-step-indicator inactive">3</div>
+                        <div id="step4-indicator" class="desktop-step-indicator inactive">4</div>
+                        <div id="step5-indicator" class="desktop-step-indicator inactive">5</div>
+                        <div id="step6-indicator" class="desktop-step-indicator inactive">6</div>
+                    </div>
+                    <!-- Área de Conteúdo Principal -->
+                    <div id="app-container" class="w-full">
+                        <!-- Passo 1: Identificação -->
+                        <div id="step1" class="step-content">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Bem-vindo ao Totem de Autoatendimento</h2>
+                            <p class="text-gray-700 mb-6 text-center">Por favor, identifique-se para iniciar seu atendimento.</p>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-semibold mb-2" for="carteira">Carteira:</label>
+                                <input class="desktop-input" id="carteira" placeholder="Digite sua carteira (apenas números)" type="number"/>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-semibold mb-2" for="cpf">CPF:</label>
+                                <input class="desktop-input" id="cpf" placeholder="Digite seu CPF (apenas números)" type="number"/>
+                            </div>
+                            <div class="text-center mb-6">
+                                <p class="text-gray-700 text-sm mb-2">Ou escaneie o QR Code:</p>
+                                <img alt="Placeholder de QR Code" class="mx-auto rounded-lg shadow-md" src="https://placehold.co/150x150/00995D/ffffff?text=QR+Code"/>
+                            </div>
+                            <button id="next-step1" class="desktop-btn-primary w-full">Continuar</button>
+                        </div>
+                        <!-- Passo 2: Confirmação de Agendamento -->
+                        <div id="step2" class="step-content hidden">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Confirmação de Agendamento</h2>
+                            <p class="text-gray-700 mb-6 text-center">Por favor, confirme os detalhes do seu agendamento:</p>
+                            <div class="bg-light-yellow p-6 rounded-lg text-left mb-6 border border-light-green">
+                                <p class="text-lg font-semibold text-dark-text mb-2">Dia/Hora:</p>
+                                <p id="appointment-date" class="text-xl text-primary-green mb-4">07/08/2025 às 10:00</p>
+                                <p class="text-lg font-semibold text-dark-text mb-2">Procedimento:</p>
+                                <p id="appointment-procedure" class="text-xl text-primary-green mb-4">Cirurgia de Apendicectomia</p>
+                                <p class="text-lg font-semibold text-dark-text mb-2">Cirurgião:</p>
+                                <p id="appointment-surgeon" class="text-xl text-primary-green">Dr. João Silva</p>
+                            </div>
+                            <div class="flex flex-col space-y-4">
+                                <button id="confirm-details" class="desktop-btn-primary w-full">Confirmar Dados</button>
+                                <button id="back-to-id" class="desktop-btn-primary w-full bg-gray-300 text-dark-text hover:bg-gray-400">Voltar</button>
+                            </div>
+                        </div>
+                        <!-- Passo 3: Validação da Autorização -->
+                        <div id="step3" class="step-content hidden">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Validação da Autorização</h2>
+                            <div class="flex flex-col items-center justify-center mb-6">
+                                <div id="loading-spinner" class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary-green mb-4"></div>
+                                <p id="authorization-message" class="text-gray-700 text-lg font-medium">Verificando sua autorização...</p>
+                            </div>
+                            <div id="authorization-result" class="hidden text-center">
+                                <p id="result-text" class="text-xl font-bold mb-4"></p>
+                                <button id="next-step3" class="desktop-btn-primary w-full hidden">Continuar</button>
+                                <button id="seek-assistance" class="desktop-btn-primary w-full bg-gray-300 text-dark-text hover:bg-gray-400 hidden">Buscar Atendimento Humano</button>
+                            </div>
+                        </div>
+                        <!-- Passo 4: Assinatura Digital -->
+                        <div id="step4" class="step-content hidden">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Assinatura Digital</h2>
+                            <p class="text-gray-700 mb-6 text-center">Por favor, assine os documentos abaixo que serão enviados para seu contato E-mail ou WhatsApp:</p>
+                            <div id="documents-container" class="bg-gray-100 p-4 rounded-lg mb-6 max-h-60 overflow-y-auto border border-gray-200">
+                                <h3 class="font-semibold text-lg mb-2">Termo de Internação Hospitalar</h3>
+                                <p class="text-sm text-gray-600 mb-4">Eu, [Nome do Paciente], declaro estar ciente e de acordo com as condições de internação no Hospital Unimed Fortaleza, incluindo os procedimentos médicos, políticas do hospital e responsabilidades financeiras, conforme aplicável.</p>
+                                <h3 class="font-semibold text-lg mb-2">Termo de Consentimento Informado</h3>
+                                <p class="text-sm text-gray-600">Declaro que fui devidamente informado sobre o procedimento [Nome do Procedimento], seus riscos, benefícios e alternativas, e concedo meu consentimento livre e esclarecido para a sua realização.</p>
+                            </div>
+                            <div class="flex flex-col space-y-4">
+                                <button id="send-link" class="desktop-btn-primary w-full">Documentos Assinados</button>
+                            </div>
+                        </div>
+                        <!-- Passo 5: Impressão de Identificação -->
+                        <div id="step5" class="step-content hidden">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Impressão de Identificação</h2>
+                            <p class="text-gray-700 mb-6 text-center">Estamos imprimindo sua pulseira de identificação e etiquetas para exames e prontuário.</p>
+                            <div class="flex flex-col items-center justify-center mb-6">
+                                <img src="https://placehold.co/100x100/00995D/ffffff?text=Etiquetas" alt="Ícone de etiquetas" class="mb-4 rounded-lg shadow-md">
+                                <p class="text-lg font-medium text-gray-700">Por favor, retire seus itens impressos.</p>
+                            </div>
+                            <button id="next-step5" class="desktop-btn-primary w-full">Continuar</button>
+                        </div>
+                        <!-- Passo 6: Direcionamento Final -->
+                        <div id="step6" class="step-content hidden">
+                            <h2 class="text-3xl font-bold text-dark-text mb-6 text-center text-primary-green">Atendimento Gerado e Direcionamento</h2>
+                            <p class="text-gray-700 mb-6 text-center">Seu atendimento foi gerado com sucesso!</p>
+                            <div class="bg-light-green p-6 rounded-lg text-center mb-6 border border-light-green">
+                                <p class="text-xl font-bold text-dark-green mb-2">Número do Atendimento:</p>
+                                <p id="attendance-number" class="text-4xl font-extrabold text-primary-green mb-4">Aguarde...</p>
+                                <p class="text-lg text-gray-700 mb-2">Status: <span id="attendance-status" class="font-semibold text-primary-green">Aguardando Leito</span></p>
+                                <p class="text-lg text-gray-700">Por favor, dirija-se à:</p>
+                                <p id="direction-location" class="text-2xl font-bold text-primary-green">Sala de Espera 1</p>
+                            </div>
+                            <p class="text-gray-700 text-center mb-6">Você receberá uma confirmação e orientações adicionais via WhatsApp/SMS.</p>
+                            <button id="finish-flow" class="desktop-btn-primary w-full">Concluir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Lógica do wizard
+        const stepContents = document.querySelectorAll('.step-content');
+        const stepIndicators = document.querySelectorAll('.desktop-step-indicator');
+        let currentStep = 1;
+
+        function showStep(stepNumber) {
+            stepContents.forEach((step, idx) => {
+                if (idx + 1 === stepNumber) {
+                    step.classList.remove('hidden');
+                } else {
+                    step.classList.add('hidden');
+                }
+            });
+            stepIndicators.forEach((indicator, idx) => {
+                indicator.classList.remove('active', 'inactive', 'completed');
+                if (idx + 1 < stepNumber) {
+                    indicator.classList.add('completed');
+                } else if (idx + 1 === stepNumber) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.add('inactive');
+                }
+            });
+            currentStep = stepNumber;
+        }
+
+        // Event Listeners
+        document.getElementById('next-step1').addEventListener('click', () => {
+            const carteira = document.getElementById('carteira').value;
+            const cpf = document.getElementById('cpf').value;
+            if (carteira || cpf) {
+                showStep(2);
+            }
+        });
+
+        document.getElementById('confirm-details').addEventListener('click', () => {
+            showStep(3);
+            setTimeout(() => {
+                const loadingSpinner = document.getElementById('loading-spinner');
+                const authorizationMessage = document.getElementById('authorization-message');
+                const authorizationResult = document.getElementById('authorization-result');
+                const resultText = document.getElementById('result-text');
+                const nextStep3Btn = document.getElementById('next-step3');
+                const seekAssistanceBtn = document.getElementById('seek-assistance');
+
+                loadingSpinner.classList.add('hidden');
+                authorizationMessage.classList.add('hidden');
+                authorizationResult.classList.remove('hidden');
+
+                // Simulação da validação de autorização
+                const isAuthorized = Math.random() > 0.10;
+                if (isAuthorized) {
+                    resultText.textContent = 'Autorização Aprovada!';
+                    resultText.classList.add('text-primary-green');
+                    resultText.classList.remove('text-red-600');
+                    nextStep3Btn.classList.remove('hidden');
+                    seekAssistanceBtn.classList.add('hidden');
+                } else {
+                    resultText.textContent = 'Autorização Pendente. Por favor, dirija-se ao atendimento humano.';
+                    resultText.classList.add('text-red-600');
+                    resultText.classList.remove('text-primary-green');
+                    nextStep3Btn.classList.add('hidden');
+                    seekAssistanceBtn.classList.remove('hidden');
+                }
+            }, 2000);
+        });
+
+        document.getElementById('back-to-id').addEventListener('click', () => {
+            showStep(1);
+        });
+
+        document.getElementById('next-step3').addEventListener('click', () => {
+            showStep(4);
+        });
+
+        document.getElementById('seek-assistance').addEventListener('click', () => {
+            console.log('Usuário solicitou atendimento humano.');
+        });
+
+        document.getElementById('send-link').addEventListener('click', () => {
+            showStep(5);
+        });
+
+        document.getElementById('next-step5').addEventListener('click', () => {
+            showStep(6);
+            const attendanceNumber = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('attendance-number').textContent = attendanceNumber;
+        });
+
+        document.getElementById('finish-flow').addEventListener('click', () => {
+            showStep(1);
+            document.getElementById('cpf').value = '';
+            document.getElementById('carteira').value = '';
+            document.getElementById('loading-spinner').classList.remove('hidden');
+            document.getElementById('authorization-message').classList.remove('hidden');
+            document.getElementById('authorization-result').classList.add('hidden');
+            document.getElementById('result-text').textContent = '';
+            document.getElementById('next-step3').classList.add('hidden');
+            document.getElementById('seek-assistance').classList.add('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep(1);
+        });
+    </script>
+</body>
+</html>
